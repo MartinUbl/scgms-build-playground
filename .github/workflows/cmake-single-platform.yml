@@ -1,3 +1,4 @@
+# Build SmartCGMS workflow
 name: Build SmartCGMS (CMake)
 
 on:
