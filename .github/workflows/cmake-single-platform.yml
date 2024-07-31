@@ -1,4 +1,4 @@
-name: Build SmartCGMS using CMake
+name: Build SmartCGMS (CMake)
 
 on:
   push:
