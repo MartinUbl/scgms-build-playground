@@ -11,7 +11,7 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build-windows:
+  build-windows-x86_64:
     runs-on: windows-latest
 
     steps:
@@ -44,7 +44,7 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-  build-linux:
+  build-linux-x86_64:
     runs-on: ubuntu-latest
 
     steps:
@@ -68,8 +68,8 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-  build-mac:
-    runs-on: macos-latest
+  build-mac-x86_64:
+    runs-on: macos-13
 
     steps:
     - uses: actions/checkout@v4
