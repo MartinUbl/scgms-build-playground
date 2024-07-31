@@ -13,3 +13,12 @@
 [submodule "buildsystem"]
 	path = buildsystem
 	url = https://github.com/SmartCGMS/buildsystem.git
+[submodule "deps/Eigen3"]
+	path = deps/Eigen3
+	url = https://github.com/SmartCGMS/Eigen3.git
+[submodule "deps/xlnt"]
+	path = deps/xlnt
+	url = https://github.com/SmartCGMS/xlnt.git
+[submodule "deps/ExcelFormat"]
+	path = deps/ExcelFormat
+	url = https://github.com/SmartCGMS/ExcelFormat.git
