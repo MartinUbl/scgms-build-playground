@@ -28,7 +28,7 @@ jobs:
       run: git submodule update --remote --init
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE="${{ steps.setup-ndk.outputs.ndk-path }}/build/cmake/android.toolchain.cmake" -DANDROID_ABI="armeabi-v7a" -DANDROID_NATIVE_API_LEVEL=23 -DQt_DISABLE=TRUE -DCOMPONENT_CONSOLE=FALSE -DCOMPONENT_DESKTOP=FALSE -DCOMPONENT_EXCEL_LOADERS=FALSE -DCMAKE_CXX_FLAGS="-DNOGUI -DSTDCPP_FS_DISABLED -DANDROID" -DEIGEN3_INCLUDE=deps/Eigen3
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE="${{ steps.setup-ndk.outputs.ndk-path }}/build/cmake/android.toolchain.cmake" -DANDROID_ABI="armeabi-v7a" -DANDROID_NATIVE_API_LEVEL=23 -DQt_DISABLE=TRUE -DBUILD_CORE_ONLY=TRUE -DCOMPONENT_EXCEL_LOADERS=FALSE -DCMAKE_CXX_FLAGS="-DNOGUI -DSTDCPP_FS_DISABLED -DANDROID" -DEIGEN3_INCLUDE=deps/Eigen3
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
