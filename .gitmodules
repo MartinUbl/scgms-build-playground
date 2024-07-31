@@ -1,0 +1,15 @@
+[submodule "common"]
+	path = common
+	url = https://github.com/SmartCGMS/common.git
+[submodule "core"]
+	path = core
+	url = https://github.com/SmartCGMS/core.git
+[submodule "desktop"]
+	path = desktop
+	url = https://github.com/SmartCGMS/desktop.git
+[submodule "console"]
+	path = console
+	url = https://github.com/SmartCGMS/console.git
+[submodule "buildsystem"]
+	path = buildsystem
+	url = https://github.com/SmartCGMS/buildsystem.git
