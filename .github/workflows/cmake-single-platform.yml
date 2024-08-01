@@ -72,13 +72,13 @@ jobs:
       run: git submodule update --remote --init
 
     - name: Build xlnt
-      run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj /arch:AVX" -DCMAKE_CXX_FLAGS="/bigobj /arch:AVX" && cmake --build . --config ${{env.BUILD_TYPE}}
+      run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj /arch:AVX" -DCMAKE_CXX_FLAGS="/bigobj /arch:AVX /EHsc" && cmake --build . --config ${{env.BUILD_TYPE}}
 
     - name: Build ExcelFormat
-      run: cd deps/ExcelFormat && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj /arch:AVX" -DCMAKE_CXX_FLAGS="/bigobj /arch:AVX" && cmake --build . --config ${{env.BUILD_TYPE}}
+      run: cd deps/ExcelFormat && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj /arch:AVX" -DCMAKE_CXX_FLAGS="/bigobj /arch:AVX /EHsc" && cmake --build . --config ${{env.BUILD_TYPE}}
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/arch:AVX" -DCMAKE_CXX_FLAGS="/arch:AVX" -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/${{env.BUILD_TYPE}}/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/${{env.BUILD_TYPE}}/ -DEIGEN3_INCLUDE=deps/Eigen3
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/arch:AVX" -DCMAKE_CXX_FLAGS="/arch:AVX /EHsc" -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/${{env.BUILD_TYPE}}/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/${{env.BUILD_TYPE}}/ -DEIGEN3_INCLUDE=deps/Eigen3
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
@@ -111,13 +111,13 @@ jobs:
       run: git submodule update --remote --init
 
     - name: Build xlnt
-      run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj /arch:AVX2" -DCMAKE_CXX_FLAGS="/bigobj /arch:AVX2" && cmake --build . --config ${{env.BUILD_TYPE}}
+      run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj /arch:AVX2" -DCMAKE_CXX_FLAGS="/bigobj /arch:AVX2 /EHsc" && cmake --build . --config ${{env.BUILD_TYPE}}
 
     - name: Build ExcelFormat
-      run: cd deps/ExcelFormat && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj /arch:AVX2" -DCMAKE_CXX_FLAGS="/bigobj /arch:AVX2" && cmake --build . --config ${{env.BUILD_TYPE}}
+      run: cd deps/ExcelFormat && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj /arch:AVX2" -DCMAKE_CXX_FLAGS="/bigobj /arch:AVX2 /EHsc" && cmake --build . --config ${{env.BUILD_TYPE}}
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/arch:AVX2" -DCMAKE_CXX_FLAGS="/arch:AVX2" -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/${{env.BUILD_TYPE}}/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/${{env.BUILD_TYPE}}/ -DEIGEN3_INCLUDE=deps/Eigen3
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/arch:AVX2" -DCMAKE_CXX_FLAGS="/arch:AVX2 /EHsc" -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/${{env.BUILD_TYPE}}/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/${{env.BUILD_TYPE}}/ -DEIGEN3_INCLUDE=deps/Eigen3
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
@@ -126,6 +126,96 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: scgms-windows-x86_64_AVX2
+        path: ${{github.workspace}}/build/compiled/
+
+  build-linux-x86_64:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Fetch dependencies
+      run: sudo apt update && sudo apt install -y qtbase5-dev libqt5svg5-dev
+
+    - name: Update submodules
+      run: git submodule update --remote --init
+
+    - name: Build xlnt
+      run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" -DCMAKE_CXX_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" && cmake --build . --config ${{env.BUILD_TYPE}}
+
+    - name: Build ExcelFormat
+      run: cd deps/ExcelFormat && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" -DCMAKE_CXX_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" && cmake --build . --config ${{env.BUILD_TYPE}}
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/ -DEIGEN3_INCLUDE=deps/Eigen3
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Upload build outputs
+      uses: actions/upload-artifact@v4
+      with:
+        name: scgms-linux-x86_64
+        path: ${{github.workspace}}/build/compiled/
+
+  build-linux-x86_64_AVX:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Fetch dependencies
+      run: sudo apt update && sudo apt install -y qtbase5-dev libqt5svg5-dev
+
+    - name: Update submodules
+      run: git submodule update --remote --init
+
+    - name: Build xlnt
+      run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-fPIC -Wno-deprecated-declarations -mavx" -DCMAKE_CXX_FLAGS="-fPIC -Wno-deprecated-declarations -mavx" && cmake --build . --config ${{env.BUILD_TYPE}}
+
+    - name: Build ExcelFormat
+      run: cd deps/ExcelFormat && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-fPIC -Wno-deprecated-declarations -mavx" -DCMAKE_CXX_FLAGS="-fPIC -Wno-deprecated-declarations -mavx" && cmake --build . --config ${{env.BUILD_TYPE}}
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-mavx" -DCMAKE_CXX_FLAGS="-mavx" -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/ -DEIGEN3_INCLUDE=deps/Eigen3
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Upload build outputs
+      uses: actions/upload-artifact@v4
+      with:
+        name: scgms-linux-x86_64_AVX
+        path: ${{github.workspace}}/build/compiled/
+
+  build-linux-x86_64_AVX2:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Fetch dependencies
+      run: sudo apt update && sudo apt install -y qtbase5-dev libqt5svg5-dev
+
+    - name: Update submodules
+      run: git submodule update --remote --init
+
+    - name: Build xlnt
+      run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-fPIC -Wno-deprecated-declarations -mavx2" -DCMAKE_CXX_FLAGS="-fPIC -Wno-deprecated-declarations -mavx2" && cmake --build . --config ${{env.BUILD_TYPE}}
+
+    - name: Build ExcelFormat
+      run: cd deps/ExcelFormat && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-fPIC -Wno-deprecated-declarations -mavx2" -DCMAKE_CXX_FLAGS="-fPIC -Wno-deprecated-declarations -mavx2" && cmake --build . --config ${{env.BUILD_TYPE}}
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-mavx2" -DCMAKE_CXX_FLAGS="-mavx2" -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/ -DEIGEN3_INCLUDE=deps/Eigen3
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Upload build outputs
+      uses: actions/upload-artifact@v4
+      with:
+        name: scgms-linux-x86_64_AVX2
         path: ${{github.workspace}}/build/compiled/
 
 #  build-android-arm7:
@@ -182,36 +272,6 @@ jobs:
 #      uses: actions/upload-artifact@v4
 #      with:
 #        name: scgms-android-arm64-v8a
-#        path: ${{github.workspace}}/build/compiled/
-#
-#  build-linux-x86_64:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - uses: actions/checkout@v4
-#
-#    - name: Fetch dependencies
-#      run: sudo apt update && sudo apt install -y qtbase5-dev libqt5svg5-dev
-#
-#    - name: Update submodules
-#      run: git submodule update --remote --init
-#
-#    - name: Build xlnt
-#      run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" -DCMAKE_CXX_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" && cmake --build . --config ${{env.BUILD_TYPE}}
-#
-#    - name: Build ExcelFormat
-#      run: cd deps/ExcelFormat && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" -DCMAKE_CXX_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" && cmake --build . --config ${{env.BUILD_TYPE}}
-#
-#    - name: Configure CMake
-#      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/ -DEIGEN3_INCLUDE=deps/Eigen3
-#
-#    - name: Build
-#      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-#
-#    - name: Upload build outputs
-#      uses: actions/upload-artifact@v4
-#      with:
-#        name: scgms-linux-x86_64
 #        path: ${{github.workspace}}/build/compiled/
 #
 #  build-mac-x86_64:
