@@ -97,7 +97,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: scgms-linux-x86_64
-        path: ${{github.workspace}}/build/scgms-linux-x86_64.tar
+        path: ${{github.workspace}}/build/compiled/
 
 #  build-mac-x86_64:
 #    runs-on: macos-13
