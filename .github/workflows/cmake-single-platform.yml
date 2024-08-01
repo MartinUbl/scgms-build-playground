@@ -78,7 +78,7 @@ jobs:
       run: cd deps/ExcelFormat && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj /arch:AVX" -DCMAKE_CXX_FLAGS="/bigobj /arch:AVX" && cmake --build . --config ${{env.BUILD_TYPE}}
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/${{env.BUILD_TYPE}}/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/${{env.BUILD_TYPE}}/ -DEIGEN3_INCLUDE=deps/Eigen3
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/arch:AVX" -DCMAKE_CXX_FLAGS="/arch:AVX" -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/${{env.BUILD_TYPE}}/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/${{env.BUILD_TYPE}}/ -DEIGEN3_INCLUDE=deps/Eigen3
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
@@ -86,7 +86,46 @@ jobs:
     - name: Upload build outputs
       uses: actions/upload-artifact@v4
       with:
-        name: scgms-windows-x86_64
+        name: scgms-windows-x86_64_AVX
+        path: ${{github.workspace}}/build/compiled/
+
+  build-windows-x86_64_AVX2:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '5.15.2'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2019_64'
+        install-deps: 'true'
+        archives: 'qtbase qtsvg qtsql'
+        set-env: 'true'
+        tools-only: 'false'
+
+    - name: Update submodules
+      run: git submodule update --remote --init
+
+    - name: Build xlnt
+      run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj /arch:AVX2" -DCMAKE_CXX_FLAGS="/bigobj /arch:AVX2" && cmake --build . --config ${{env.BUILD_TYPE}}
+
+    - name: Build ExcelFormat
+      run: cd deps/ExcelFormat && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj /arch:AVX2" -DCMAKE_CXX_FLAGS="/bigobj /arch:AVX2" && cmake --build . --config ${{env.BUILD_TYPE}}
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/arch:AVX2" -DCMAKE_CXX_FLAGS="/arch:AVX2" -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/${{env.BUILD_TYPE}}/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/${{env.BUILD_TYPE}}/ -DEIGEN3_INCLUDE=deps/Eigen3
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Upload build outputs
+      uses: actions/upload-artifact@v4
+      with:
+        name: scgms-windows-x86_64_AVX2
         path: ${{github.workspace}}/build/compiled/
 
 #  build-android-arm7:
