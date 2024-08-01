@@ -11,27 +11,27 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build-android-arm7:
-    runs-on: ubuntu-latest
+#  build-android-arm7:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#    - uses: actions/checkout@v4
+#
+#    - uses: nttld/setup-ndk@v1
+#      id: setup-ndk
+#      with:
+#        ndk-version: r27
+#        add-to-path: false
+#        local-cache: false
 
-    steps:
-    - uses: actions/checkout@v4
-
-    - uses: nttld/setup-ndk@v1
-      id: setup-ndk
-      with:
-        ndk-version: r27
-        add-to-path: false
-        local-cache: false
-
-    - name: Update submodules
-      run: git submodule update --remote --init
-
-    - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE="${{ steps.setup-ndk.outputs.ndk-path }}/build/cmake/android.toolchain.cmake" -DANDROID_ABI="armeabi-v7a" -DANDROID_NATIVE_API_LEVEL=23 -DQt_DISABLE=TRUE -DBUILD_CORE_ONLY=TRUE -DCOMPONENT_EXCEL_LOADERS=FALSE -DCMAKE_CXX_FLAGS="-DNOGUI -DSTDCPP_FS_DISABLED -DANDROID" -DEIGEN3_INCLUDE=deps/Eigen3
-
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+#    - name: Update submodules
+#      run: git submodule update --remote --init
+#
+#    - name: Configure CMake
+#      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE="${{ steps.setup-ndk.outputs.ndk-path }}/build/cmake/android.toolchain.cmake" -DANDROID_ABI="armeabi-v7a" -DANDROID_NATIVE_API_LEVEL=23 -DQt_DISABLE=TRUE -DBUILD_CORE_ONLY=TRUE -DCOMPONENT_EXCEL_LOADERS=FALSE -DCMAKE_CXX_FLAGS="-DNOGUI -DSTDCPP_FS_DISABLED -DANDROID" -DEIGEN3_INCLUDE=deps/Eigen3
+#
+#    - name: Build
+#      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
 #  build-windows-x86_64:
 #    runs-on: windows-latest
@@ -65,30 +65,39 @@ jobs:
 #
 #    - name: Build
 #      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-#
-#  build-linux-x86_64:
-#    runs-on: ubuntu-latest
 
-#    steps:
-#    - uses: actions/checkout@v4
+  build-linux-x86_64:
+    runs-on: ubuntu-latest
 
-#    - name: Fetch dependencies
-#      run: sudo apt update && sudo apt install -y qtbase5-dev libqt5svg5-dev
+    steps:
+    - uses: actions/checkout@v4
 
-#    - name: Update submodules
-#      run: git submodule update --remote --init
+    - name: Fetch dependencies
+      run: sudo apt update && sudo apt install -y qtbase5-dev libqt5svg5-dev
 
-#    - name: Build xlnt
-#      run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" -DCMAKE_CXX_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" && cmake --build . --config ${{env.BUILD_TYPE}}
+    - name: Update submodules
+      run: git submodule update --remote --init
 
-#    - name: Build ExcelFormat
-#      run: cd deps/ExcelFormat && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" -DCMAKE_CXX_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" && cmake --build . --config ${{env.BUILD_TYPE}}
+    - name: Build xlnt
+      run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" -DCMAKE_CXX_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" && cmake --build . --config ${{env.BUILD_TYPE}}
 
-#    - name: Configure CMake
-#      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/ -DEIGEN3_INCLUDE=deps/Eigen3
+    - name: Build ExcelFormat
+      run: cd deps/ExcelFormat && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" -DCMAKE_CXX_FLAGS="-fPIC -Wno-deprecated-declarations -Wno-everything" && cmake --build . --config ${{env.BUILD_TYPE}}
 
-#    - name: Build
-#      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DXLNT_INCLUDE=deps/xlnt/include/ -DXLNT_LIBRARY=deps/xlnt/source/ -DEXCELFORMAT_INCLUDE=deps/ExcelFormat/include/ -DEXCELFORMAT_LIBRARY=deps/ExcelFormat/ -DEIGEN3_INCLUDE=deps/Eigen3
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Archive outputs
+      run: tar -cvzf scgms-linux-x86_64.tar.gz ${{github.workspace}}/build/compiled
+
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v4
+      with:
+        name: scgms-linux-x86_64
+        path: scgms-linux-x86_64.tar.gz
 
 #  build-mac-x86_64:
 #    runs-on: macos-13
