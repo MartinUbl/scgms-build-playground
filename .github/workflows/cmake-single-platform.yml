@@ -33,6 +33,9 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
+    - name: Mark version
+      run: cp ${{github.workspace}}/scgms_version ${{github.workspace}}/build/compiled/scgms_version
+
     - name: Upload build outputs
       uses: actions/upload-artifact@v4
       with:
@@ -63,6 +66,9 @@ jobs:
 #    - name: Build
 #      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 #
+#    - name: Mark version
+#      run: cp ${{github.workspace}}/scgms_version ${{github.workspace}}/build/compiled/scgms_version
+#
 #    - name: Upload build outputs
 #      uses: actions/upload-artifact@v4
 #      with:
@@ -92,6 +98,9 @@ jobs:
 #
 #    - name: Build
 #      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+#
+#    - name: Mark version
+#      run: cp ${{github.workspace}}/scgms_version ${{github.workspace}}/build/compiled/scgms_version
 #
 #    - name: Upload build outputs
 #      uses: actions/upload-artifact@v4
@@ -132,6 +141,9 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
+    - name: Mark version
+      run: copy ${{github.workspace}}\scgms_version ${{github.workspace}}\build\compiled\scgms_version
+
     - name: Upload build outputs
       uses: actions/upload-artifact@v4
       with:
@@ -170,6 +182,9 @@ jobs:
 #
 #    - name: Build
 #      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+#
+#    - name: Mark version
+#      run: copy ${{github.workspace}}\scgms_version ${{github.workspace}}\build\compiled\scgms_version
 #
 #    - name: Upload build outputs
 #      uses: actions/upload-artifact@v4
@@ -210,6 +225,9 @@ jobs:
 #    - name: Build
 #      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 #
+#    - name: Mark version
+#      run: copy ${{github.workspace}}\scgms_version ${{github.workspace}}\build\compiled\scgms_version
+#
 #    - name: Upload build outputs
 #      uses: actions/upload-artifact@v4
 #      with:
@@ -238,6 +256,9 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
+    - name: Mark version
+      run: cp ${{github.workspace}}/scgms_version ${{github.workspace}}/build/compiled/scgms_version
+
     - name: Upload build outputs
       uses: actions/upload-artifact@v4
       with:
@@ -265,6 +286,9 @@ jobs:
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Mark version
+      run: cp ${{github.workspace}}/scgms_version ${{github.workspace}}/build/compiled/scgms_version
 
     - name: Upload build outputs
       uses: actions/upload-artifact@v4
@@ -304,6 +328,9 @@ jobs:
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Mark version
+      run: cp ${{github.workspace}}/scgms_version ${{github.workspace}}/build/compiled/scgms_version
 
     - name: Upload build outputs
       uses: actions/upload-artifact@v4
