@@ -10,9 +10,6 @@
 [submodule "console"]
 	path = console
 	url = https://github.com/SmartCGMS/console.git
-[submodule "buildsystem"]
-	path = buildsystem
-	url = https://github.com/SmartCGMS/buildsystem.git
 [submodule "deps/Eigen3"]
 	path = deps/Eigen3
 	url = https://github.com/SmartCGMS/Eigen3.git
