@@ -146,8 +146,11 @@ jobs:
     - name: Deploy Qt libraries
       run: cd ${{github.workspace}}/build/compiled/Release/ && ${{ github.workspace }}\deps\Qt\5.15.2\msvc2019_64\bin\windeployqt.exe scgms-desktop.exe
 
+    - name: Copy dependencies
+      run: copy ${{github.workspace}}\deps\xlnt\source\${{env.BUILD_TYPE}}\xlnt.dll ${{github.workspace}}\build\compiled\${{env.BUILD_TYPE}}\xlnt.dll
+
     - name: Mark version
-      run: copy ${{github.workspace}}\scgms_version ${{github.workspace}}\build\compiled\Release\scgms_version
+      run: copy ${{github.workspace}}\scgms_version ${{github.workspace}}\build\compiled\${{env.BUILD_TYPE}}\scgms_version
 
     - name: Upload build outputs
       uses: actions/upload-artifact@v4
