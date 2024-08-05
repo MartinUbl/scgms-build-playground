@@ -142,7 +142,7 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Deploy Qt libraries
-      run: cd ${{github.workspace}}/build/compiled/Release/ && windeployqt scgms-desktop.exe
+      run: cd ${{github.workspace}}/build/compiled/Release/ && %QT_ROOT_DIR%/bin/windeployqt.exe scgms-desktop.exe
 
     - name: Mark version
       run: copy ${{github.workspace}}\scgms_version ${{github.workspace}}\build\compiled\Release\scgms_version
