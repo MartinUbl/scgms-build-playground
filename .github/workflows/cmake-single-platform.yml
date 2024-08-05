@@ -130,6 +130,9 @@ jobs:
     - name: Update submodules
       run: git submodule update --remote --init
 
+    - name: List Qt
+      run: dir /s /b "${{ github.workspace }}\deps"
+
     - name: Build xlnt
       run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj" -DCMAKE_CXX_FLAGS="/bigobj" && cmake --build . --config ${{env.BUILD_TYPE}}
 
@@ -144,9 +147,6 @@ jobs:
 
     - name: Deploy Qt libraries
       run: cd ${{github.workspace}}/build/compiled/Release/ && ${{ github.workspace }}\deps\Qt\5.15.2\msvc2019_64\bin\windeployqt.exe scgms-desktop.exe
-
-    - name: List Qt
-      run: dir /s /b "${{ github.workspace }}\deps"
 
     - name: Mark version
       run: copy ${{github.workspace}}\scgms_version ${{github.workspace}}\build\compiled\Release\scgms_version
