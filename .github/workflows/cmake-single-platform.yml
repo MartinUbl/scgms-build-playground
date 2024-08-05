@@ -127,11 +127,11 @@ jobs:
         tools-only: 'false'
         dir: '${{ github.workspace }}/deps'
 
+    - name: List Qt
+      run: dir -Recurse "${{ github.workspace }}\deps"
+
     - name: Update submodules
       run: git submodule update --remote --init
-
-    - name: List Qt
-      run: dir /s /b "${{ github.workspace }}\deps"
 
     - name: Build xlnt
       run: cd deps/xlnt && cmake . -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_FLAGS="/bigobj" -DCMAKE_CXX_FLAGS="/bigobj" && cmake --build . --config ${{env.BUILD_TYPE}}
