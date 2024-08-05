@@ -125,6 +125,7 @@ jobs:
         archives: 'qtbase qtsvg qtsql'
         set-env: 'true'
         tools-only: 'false'
+        dir: '${{ github.workspace }}/deps'
 
     - name: Update submodules
       run: git submodule update --remote --init
@@ -142,7 +143,7 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Deploy Qt libraries
-      run: cd ${{github.workspace}}/build/compiled/Release/ && %QT_ROOT_DIR%/bin/windeployqt.exe scgms-desktop.exe
+      run: cd ${{github.workspace}}/build/compiled/Release/ && ${{ github.workspace }}/deps/Qt/5.15.2/win64_msvc2019_64/bin/windeployqt.exe scgms-desktop.exe
 
     - name: Mark version
       run: copy ${{github.workspace}}\scgms_version ${{github.workspace}}\build\compiled\Release\scgms_version
